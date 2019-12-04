@@ -1,13 +1,17 @@
 let fs = require("fs");
 
-let processedInput;
-fs.readFile(`${__dirname}/input.txt`, "utf8", function(err, text) {
-  if (err) {
-    throw err;
-  }
-
-  let textByLine = text.split("\n");
-  processedInput = textByLine.map(line => {
+const input = fs.readFileSync(`${__dirname}/input.txt`, "utf8");
+const splitLine = input.split("\n");
+const processedInput = splitLine
+  .map(line => {
     return line.split(",");
+  })
+  .map(wires => {
+    return wires.map(wireDirection => {
+      return {
+        direction: wireDirection.slice(0, 1),
+        distance: parseInt(wireDirection.slice(1))
+      };
+    });
   });
-});
+export default processedInput;
