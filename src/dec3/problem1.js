@@ -4,6 +4,7 @@ import input from "./input";
 const wire1 = input[0];
 const wire2 = input[1];
 
+// problem 1
 function createPoints(wire) {
   let points = [{ x: 0, y: 0 }];
 
