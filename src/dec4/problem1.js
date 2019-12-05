@@ -1,4 +1,4 @@
-// 138307-654504
+const fs = require("fs");
 
 const potentialCodes = [];
 for (let i = 138307; i <= 654504; i++) {
@@ -28,4 +28,6 @@ potentialCodes.forEach(code => {
   }
 });
 
-console.log(codesWithDuplicates);
+// fs.writeFileSync("problem2input.txt", codesWithDuplicates, err => {
+//   if (err) throw err;
+// });
