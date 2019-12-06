@@ -1,4 +1,4 @@
-const fs = require("fs");
+// const fs = require("fs");
 
 const potentialCodes = [];
 for (let i = 138307; i <= 654504; i++) {
