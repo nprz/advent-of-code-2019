@@ -19,36 +19,53 @@ function getModes(num) {
   return numString
     .slice(0, numString.length - 2)
     .split("")
-    .map((code, i, a) => a[a.length - 1 - i]);
+    .map((code, i, a) => parseInt(a[a.length - 1 - i]));
 }
 
-console.log(getOpcode(2));
-console.log(getModes(1002));
-// export default function intCode(input) {
-//   const opcode3Input = 1;
+function increasePointer(opcode) {
+  if (opcode === 1 || opcode === 2) {
+    return 4;
+  }
 
-//   // this is not updating by four every code.
-//   for (let i = 0; i < input.length; i += 4) {
-//     if (input[i] === 1) {
-//       // needs to be in immediate mode too
-//       const operand1 = input[i + 1];
-//       const operand2 = input[i + 2];
-//       const address = input[i + 3];
-//       input[address] = input[operand1] + input[operand2];
-//     } else if (input[i] === 2) {
-//       // needs to be in immediate mode too
-//       const operand1 = input[i + 1];
-//       const operand2 = input[i + 2];
-//       const address = input[i + 3];
-//       input[address] = input[operand1] * input[operand2];
-//     } else if (input[i] === 3) {
+  return 2;
+}
 
-//     } else if (input[i] === 4) {
+export default function intCode(input) {
+  const opcode3Input = 1;
+  let pointer = 0;
 
-//     } else if (input[i] === 99) {
-//       break;
-//     }
-//   }
+  while (input[pointer] !== 99) {
+    const opcode = getOpcode(input[pointer]);
+    const modes = getModes(input[pointer]);
 
-//   return input[0];
-// }
+    if (opcode === 1) {
+      const operand1 = input[pointer + 1];
+      const leftInput = modes[0] === 1 ? operand1 : input[operand1];
+      const operand2 = input[pointer + 2];
+      const rightInput = modes[1] === 1 ? operand2 : input[operand2];
+      const address = input[pointer + 3];
+      input[address] = leftInput + rightInput;
+    } else if (opcode === 2) {
+      const operand1 = input[pointer + 1];
+      const leftInput = modes[0] === 1 ? operand1 : input[operand1];
+      const operand2 = input[pointer + 2];
+      const rightInput = modes[1] === 1 ? operand2 : input[operand2];
+      const address = input[pointer + 3];
+      input[address] = leftInput * rightInput;
+    } else if (opcode === 3) {
+      const address = input[pointer + 1];
+      input[address] = opcode3Input;
+    } else if (opcode === 4) {
+      const operand = input[pointer + 1];
+      const output = modes[0] === 1 ? operand : input[operand];
+      console.log(output);
+    }
+
+    pointer += increasePointer(opcode);
+  }
+
+  return { final: input[0] };
+}
+
+// let test = [1101, 100, -1, 4, 0];
+intCode(input);
