@@ -1,11 +1,11 @@
+COM)B
 B)C
 C)D
-J)K
 D)E
 E)F
-COM)B
 B)G
-D)I
-K)L
-E)J
 G)H
+D)I
+E)J
+J)K
+K)L

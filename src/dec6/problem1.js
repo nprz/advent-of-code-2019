@@ -27,28 +27,25 @@ class PlanetNode {
   }
 }
 
-function deleteElement(index = null, list) {
-  delete list[index];
-  return list.filter(elem => typeof elem !== undefined);
-}
-
-function addOrbit(node, list) {
+function addOrbit(parentNode, list) {
   // create list of ALL children here
-  const nodeChildren = list.filter((orbit, index) => {
-    // return object with index attached
-    orbit.parent === node.value;
+  const nodeChildren = [];
+  list.forEach((orbit, index) => {
+    if (orbit.parent === parentNode.value) {
+      nodeChildren.push({
+        node: orbit,
+        index
+      });
+    }
   });
 
-  nodeChildren.forEach(child => {
-    node.child.push();
-  });
-  // if (index !== -1) {
-  //   node.children.push(list[index]);
-  //   list = deleteElement(index, list);
+  nodeChildren.forEach((child, i) => {
+    const { node, index } = child;
 
-  //   // need to repeat to make parent
-  //   // contains no more children
-  // }
+    parentNode.children.push(new PlanetNode(node.child));
+
+    addOrbit(parentNode.children[i], list);
+  });
 }
 
 function createOrbitGraph() {
@@ -59,15 +56,48 @@ function createOrbitGraph() {
   const graph = new PlanetNode(root.parent);
   graph.children.push(new PlanetNode(root.child));
 
-  // remove node from list of available nodes
-  orbitPairs = deleteElement(index, orbitPairs);
-  console.log(graph);
-  //addOrbit();
+  // recursively add elements
+  addOrbit(graph.children[0], orbitPairs);
+  return graph;
 }
 
-createOrbitGraph();
+function traverseGraph(parentNode, currentLevel, orbitTotal) {
+  const childrenCount = parentNode.children.length;
+
+  if (!childrenCount) {
+    return currentLevel;
+  }
+
+  for (let i = 0; i < childrenCount; i++) {
+    orbitTotal.push(
+      traverseGraph(parentNode.children[i], currentLevel + 1, orbitTotal)
+    );
+  }
+  return currentLevel;
+}
+
+const orbitGraph = createOrbitGraph();
+const orbitTotal = [];
+traverseGraph(orbitGraph, 0, orbitTotal);
+const total = orbitTotal.reduce((acc, cur) => acc + cur);
+
+/* 
+  B - 1
+  G - 2
+  H - 3
+  C - 2
+  D - 3
+  I - 4
+  E - 4
+  J - 5
+  K - 6
+  L - 7
+  F - 5
+/*
 
 /*
+Graph Data Structure
+
 {
   value: COM
   child: [{ value: B, child: [{ value: G, child: [...] }, { value: C, child: [...] }] }, ]
