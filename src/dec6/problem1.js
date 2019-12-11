@@ -81,6 +81,7 @@ const orbitTotal = [];
 traverseGraph(orbitGraph, 0, orbitTotal);
 const total = orbitTotal.reduce((acc, cur) => acc + cur);
 
+export default orbitGraph;
 /* 
   B - 1
   G - 2
