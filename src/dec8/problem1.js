@@ -1,8 +1,8 @@
 import input from "./input";
 
-const HEIGHT = 6;
-const WIDTH = 25;
-const PIXELS = HEIGHT * WIDTH;
+export const HEIGHT = 6;
+export const WIDTH = 25;
+export const PIXELS = HEIGHT * WIDTH;
 const layers = [];
 
 for (let i = 0; i < input.length; i += PIXELS) {
@@ -36,4 +36,5 @@ const twoCount = minZeroLayer.reduce((acc, cur) => {
 
   return acc;
 }, 0);
-console.log(oneCount * twoCount);
+
+export default layers;
