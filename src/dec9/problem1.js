@@ -70,7 +70,8 @@ export default function intCode(input) {
   while (input[pointer] !== 99) {
     const [opcode, pointerPosition] = getOpcode(input[pointer]);
     const modes = getModes(input[pointer]);
-    console.log({ opcode });
+    //console.log({ opcode });
+    //console.log({ mode: modes, value: input[pointer] });
     if (opcode === 1) {
       const operand1 = input[pointer + 1];
       const leftInput = determineOperandValue(
@@ -86,7 +87,7 @@ export default function intCode(input) {
         input,
         relativeBase
       );
-      const address = input[pointer + 3];
+      const address = getAddress(input[pointer + 3], modes[2], relativeBase);
       input[address] = leftInput + rightInput;
     } else if (opcode === 2) {
       const operand1 = input[pointer + 1];
@@ -103,7 +104,7 @@ export default function intCode(input) {
         input,
         relativeBase
       );
-      const address = input[pointer + 3];
+      const address = getAddress(input[pointer + 3], modes[2], relativeBase);
       input[address] = leftInput * rightInput;
     } else if (opcode === 3) {
       const operand = input[pointer + 1];
@@ -170,7 +171,7 @@ export default function intCode(input) {
         input,
         relativeBase
       );
-      const address = input[pointer + 3];
+      const address = getAddress(input[pointer + 3], modes[2], relativeBase);
       if (leftOperand < rightOperand) {
         input[address] = 1;
       } else {
@@ -191,7 +192,8 @@ export default function intCode(input) {
         input,
         relativeBase
       );
-      const address = input[pointer + 3];
+      const address = getAddress(input[pointer + 3], modes[2], relativeBase);
+
       if (leftOperand === rightOperand) {
         input[address] = 1;
       } else {
@@ -205,11 +207,9 @@ export default function intCode(input) {
         input,
         relativeBase
       );
-      console.log({ operand });
       relativeBase += operand;
-      console.log({ relativeBase });
     }
-    console.log({ pointer });
+    //console.log({ pointer });
     if (pointerJump !== undefined) {
       pointer = pointerJump;
       pointerJump = undefined;
