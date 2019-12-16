@@ -62,7 +62,7 @@ function getAddress(operand, mode, base) {
 }
 
 export default function intCode(input) {
-  const opcode3Input = 1;
+  const opcode3Input = 2;
   let pointer = 0;
   let relativeBase = 0;
   let pointerJump;
@@ -70,8 +70,6 @@ export default function intCode(input) {
   while (input[pointer] !== 99) {
     const [opcode, pointerPosition] = getOpcode(input[pointer]);
     const modes = getModes(input[pointer]);
-    //console.log({ opcode });
-    //console.log({ mode: modes, value: input[pointer] });
     if (opcode === 1) {
       const operand1 = input[pointer + 1];
       const leftInput = determineOperandValue(
