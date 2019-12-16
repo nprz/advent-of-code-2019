@@ -1,4 +1,4 @@
-import input from "./testInput";
+import input from "./input";
 
 function increasePointer(opcode) {
   const increaseFour = [1, 2, 7, 8];
@@ -24,7 +24,6 @@ function getOpcode(num) {
     opcode = parseInt(numString.slice(numString.length - 1));
   }
 
-  // place logic for next pointer position in here for extra coolness
   return [opcode, increasePointer(opcode)];
 }
 
@@ -44,14 +43,22 @@ function getModes(num) {
 function determineOperandValue(mode, operand, input, base) {
   if (mode === 0 || mode == undefined) {
     // position
-    return input[operand];
+    return input[operand] || 0;
   } else if (mode === 1) {
     // immediate
     return operand;
   } else if (mode === 2) {
     // relative
-    return input[operand + base];
+    return input[operand + base] || 0;
   }
+}
+
+function getAddress(operand, mode, base) {
+  if (mode === 2) {
+    return operand + base;
+  }
+
+  return operand;
 }
 
 export default function intCode(input) {
@@ -63,7 +70,7 @@ export default function intCode(input) {
   while (input[pointer] !== 99) {
     const [opcode, pointerPosition] = getOpcode(input[pointer]);
     const modes = getModes(input[pointer]);
-
+    console.log({ opcode });
     if (opcode === 1) {
       const operand1 = input[pointer + 1];
       const leftInput = determineOperandValue(
@@ -80,7 +87,6 @@ export default function intCode(input) {
         relativeBase
       );
       const address = input[pointer + 3];
-      console.log({ leftInput, rightInput, address });
       input[address] = leftInput + rightInput;
     } else if (opcode === 2) {
       const operand1 = input[pointer + 1];
@@ -100,7 +106,8 @@ export default function intCode(input) {
       const address = input[pointer + 3];
       input[address] = leftInput * rightInput;
     } else if (opcode === 3) {
-      const address = input[pointer + 1];
+      const operand = input[pointer + 1];
+      const address = getAddress(operand, modes[0], relativeBase);
       input[address] = opcode3Input;
     } else if (opcode === 4) {
       const operand = input[pointer + 1];
@@ -110,6 +117,7 @@ export default function intCode(input) {
         input,
         relativeBase
       );
+
       console.log(output);
     } else if (opcode === 5) {
       const immediate = input[pointer + 1];
@@ -144,7 +152,6 @@ export default function intCode(input) {
         input,
         relativeBase
       );
-
       if (operand === 0) {
         pointerJump = operandTwo;
       }
@@ -198,13 +205,14 @@ export default function intCode(input) {
         input,
         relativeBase
       );
-
+      console.log({ operand });
       relativeBase += operand;
+      console.log({ relativeBase });
     }
-
-    if (pointerJump) {
+    console.log({ pointer });
+    if (pointerJump !== undefined) {
       pointer = pointerJump;
-      pointerJump = null;
+      pointerJump = undefined;
     } else {
       pointer += pointerPosition;
     }
